@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jemaf K-Pasteur</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Jemaf K-Pasteur</h1>
+
+        <div class="search-box">
+
+            <div class="search-section">
+
+                <label for="numero">
+                    N° du chant
+                </label>
+
+                <div class="search-line">
+
+                    <input
+                        type="number"
+                        id="numero"
+                        placeholder="Entrez le numéro du chant"
+                    >
+
+                    <button
+                        id="boutonNumero"
+                        type="button"
+                    >
+                        Rechercher
+                    </button>
+
+                    <button
+                        id="effacerNumero"
+                        class="clear-button"
+                        type="button"
+                        title="Effacer"
+                        aria-label="Effacer la recherche par numéro"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="search-section">
+
+                <label for="motCle">
+                    ou mot clé du titre
+                </label>
+
+                <div class="search-line">
+
+                    <input
+                        type="text"
+                        id="motCle"
+                        placeholder="Exemple : beni, dieu, amour..."
+                    >
+
+                    <button
+                        id="boutonMotCle"
+                        type="button"
+                    >
+                        Rechercher
+                    </button>
+
+                    <button
+                        id="effacerMotCle"
+                        class="clear-button"
+                        type="button"
+                        title="Effacer"
+                        aria-label="Effacer la recherche par mot-clé"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="resultats-recherche"></div>
+
+
+            <div class="search-section choix-chant">
+
+                <label for="chant">
+                    ou choisir un chant
+                </label>
+
+                <div class="select-line">
+
+                    <select id="chant">
+
+                        <option value="">
+                            Sélectionnez un chant
+                        </option>
+
+                    </select>
+
+                    <button
+                        id="effacerChant"
+                        class="clear-select-button"
+                        type="button"
+                        title="Annuler la sélection"
+                        aria-label="Annuler la sélection"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
