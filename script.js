@@ -120,8 +120,11 @@ function rechercherParNumero() {
         champNumero.value.trim();
 
     if (!numero) {
+
         afficherResultats([]);
+
         return;
+
     }
 
     const resultats =
@@ -206,8 +209,11 @@ function rechercherParMotCle() {
         );
 
     if (!recherche) {
+
         afficherResultats([]);
+
         return;
+
     }
 
     const resultats =
@@ -838,11 +844,8 @@ function afficherChant(chant) {
     downloadPdfButton.href =
         chant.pdf;
 
-    downloadPdfButton.target =
-        "_blank";
-
-    downloadPdfButton.rel =
-        "noopener";
+    downloadPdfButton.download =
+        "";
 
     downloadPdfButton.textContent =
         "Télécharger la partition PDF";
