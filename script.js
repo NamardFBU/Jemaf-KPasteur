@@ -1,98 +1,13 @@
+// --------------------------------------------------------
+// CHARGEMENT DES CHANTS
+// --------------------------------------------------------
+
 let chants = [];
 
 
-// ============================================================
-// ELEMENTS HTML
-// ============================================================
-
-const numeroInput =
-    document.getElementById("numero");
-
-const motCleInput =
-    document.getElementById("motCle");
-
-const chantSelect =
-    document.getElementById("chant");
-
-const boutonNumero =
-    document.getElementById("boutonNumero");
-
-const boutonMotCle =
-    document.getElementById("boutonMotCle");
-
-const effacerNumero =
-    document.getElementById("effacerNumero");
-
-const effacerMotCle =
-    document.getElementById("effacerMotCle");
-
-const effacerChant =
-    document.getElementById("effacerChant");
-
-const resultatsRecherche =
-    document.getElementById("resultats-recherche");
-
-
-// ============================================================
-// CHARGEMENT DE LA LISTE DES CHANTS
-// ============================================================
-
-fetch("chants.json")
-    .then(response => {
-
-        if (!response.ok) {
-            throw new Error(
-                "Impossible de charger chants.json"
-            );
-        }
-
-        return response.json();
-
-    })
-    .then(data => {
-
-        chants = data;
-
-        afficherListe();
-
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        afficherMessage(
-            "Erreur lors du chargement de la liste des chants."
-        );
-
-    });
-
-
-// ============================================================
-// AFFICHER LA LISTE DANS LA LISTE DEROUlANTE
-// ============================================================
-
-function afficherListe() {
-
-    chants.forEach(chant => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = chant.numero;
-
-        option.textContent =
-            chant.numero + " - " + chant.titre;
-
-        chantSelect.appendChild(option);
-
-    });
-
-}
-
-
-// ============================================================
-// NORMALISER UN TEXTE
-// ============================================================
+// --------------------------------------------------------
+// NORMALISATION DU TEXTE
+// --------------------------------------------------------
 
 function normaliserTexte(texte) {
 
@@ -104,61 +19,194 @@ function normaliserTexte(texte) {
 }
 
 
-// ============================================================
-// RECHERCHE PAR NUMERO
-// ============================================================
+// --------------------------------------------------------
+// CHARGEMENT DU FICHIER JSON
+// --------------------------------------------------------
 
-function rechercherNumero() {
+fetch("chants.json")
+    .then(response => response.json())
+    .then(data => {
 
-    const numero =
-        numeroInput.value.trim();
+        chants = data;
 
-    if (numero === "") {
+        remplirListeChants();
 
-        afficherMessage(
-            "Veuillez entrer un numéro de chant."
+    })
+    .catch(error => {
+
+        console.error(
+            "Erreur lors du chargement des chants :",
+            error
         );
 
+    });
+
+
+// --------------------------------------------------------
+// REMPLISSAGE DE LA LISTE DEROULANTE
+// --------------------------------------------------------
+
+function remplirListeChants() {
+
+    const select =
+        document.getElementById("chant");
+
+    if (!select) {
         return;
     }
 
-    const resultat =
-        chants.find(
-            chant =>
-                String(chant.numero) === numero
-        );
+    chants.forEach(chant => {
 
-    if (!resultat) {
+        const option =
+            document.createElement("option");
 
-        afficherMessage(
-            "Aucun chant ne correspond à ce numéro."
-        );
+        option.value =
+            chant.numero;
 
-        return;
-    }
+        option.textContent =
+            chant.numero +
+            " - " +
+            chant.titre.replace(/_/g, " ");
 
-    afficherResultats([resultat]);
+        select.appendChild(option);
+
+    });
 
 }
 
 
-// ============================================================
-// RECHERCHE PAR MOT-CLE
-// ============================================================
+// --------------------------------------------------------
+// RECHERCHE PAR NUMERO
+// --------------------------------------------------------
 
-function rechercherMotCle() {
+const boutonNumero =
+    document.getElementById("boutonNumero");
 
-    const motCle =
+const champNumero =
+    document.getElementById("numero");
+
+
+if (boutonNumero) {
+
+    boutonNumero.addEventListener(
+        "click",
+        rechercherParNumero
+    );
+
+}
+
+
+if (champNumero) {
+
+    champNumero.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                rechercherParNumero();
+
+            }
+
+        }
+    );
+
+}
+
+
+function rechercherParNumero() {
+
+    const numero =
+        champNumero.value.trim();
+
+    if (!numero) {
+        afficherResultats([]);
+        return;
+    }
+
+    const resultats =
+        chants.filter(
+            chant =>
+                String(chant.numero) === numero
+        );
+
+    afficherResultats(resultats);
+
+}
+
+
+// --------------------------------------------------------
+// EFFACER LA RECHERCHE PAR NUMERO
+// --------------------------------------------------------
+
+const effacerNumero =
+    document.getElementById("effacerNumero");
+
+
+if (effacerNumero) {
+
+    effacerNumero.addEventListener(
+        "click",
+        () => {
+
+            champNumero.value = "";
+
+            afficherResultats([]);
+
+        }
+    );
+
+}
+
+
+// --------------------------------------------------------
+// RECHERCHE PAR MOT CLE
+// --------------------------------------------------------
+
+const boutonMotCle =
+    document.getElementById("boutonMotCle");
+
+const champMotCle =
+    document.getElementById("motCle");
+
+
+if (boutonMotCle) {
+
+    boutonMotCle.addEventListener(
+        "click",
+        rechercherParMotCle
+    );
+
+}
+
+
+if (champMotCle) {
+
+    champMotCle.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                rechercherParMotCle();
+
+            }
+
+        }
+    );
+
+}
+
+
+function rechercherParMotCle() {
+
+    const recherche =
         normaliserTexte(
-            motCleInput.value.trim()
+            champMotCle.value.trim()
         );
 
-    if (motCle === "") {
-
-        afficherMessage(
-            "Veuillez entrer un mot-clé."
-        );
-
+    if (!recherche) {
+        afficherResultats([]);
         return;
     }
 
@@ -166,60 +214,170 @@ function rechercherMotCle() {
         chants.filter(chant => {
 
             const titre =
-                normaliserTexte(chant.titre);
+                normaliserTexte(
+                    chant.titre.replace(/_/g, " ")
+                );
 
-            return titre.includes(motCle);
+            const numero =
+                String(chant.numero);
+
+            return (
+                titre.includes(recherche) ||
+                numero.includes(recherche)
+            );
 
         });
-
-    if (resultats.length === 0) {
-
-        afficherMessage(
-            "Aucun chant ne correspond à votre recherche."
-        );
-
-        return;
-    }
 
     afficherResultats(resultats);
 
 }
 
 
-// ============================================================
-// AFFICHER LES RESULTATS
-// ============================================================
+// --------------------------------------------------------
+// EFFACER LA RECHERCHE PAR MOT CLE
+// --------------------------------------------------------
+
+const effacerMotCle =
+    document.getElementById("effacerMotCle");
+
+
+if (effacerMotCle) {
+
+    effacerMotCle.addEventListener(
+        "click",
+        () => {
+
+            champMotCle.value = "";
+
+            afficherResultats([]);
+
+        }
+    );
+
+}
+
+
+// --------------------------------------------------------
+// LISTE DEROULANTE
+// --------------------------------------------------------
+
+const listeChants =
+    document.getElementById("chant");
+
+
+if (listeChants) {
+
+    listeChants.addEventListener(
+        "change",
+        () => {
+
+            const numero =
+                listeChants.value;
+
+            if (!numero) {
+                return;
+            }
+
+            const chant =
+                chants.find(
+                    item =>
+                        String(item.numero) === numero
+                );
+
+            if (chant) {
+
+                afficherResultats([chant]);
+
+            }
+
+        }
+    );
+
+}
+
+
+// --------------------------------------------------------
+// BOUTON POUR EFFACER LA LISTE DEROULANTE
+// --------------------------------------------------------
+
+const boutonEffacerListe =
+    document.getElementById("effacerChant");
+
+
+if (boutonEffacerListe) {
+
+    boutonEffacerListe.addEventListener(
+        "click",
+        () => {
+
+            listeChants.value = "";
+
+            afficherResultats([]);
+
+        }
+    );
+
+}
+
+
+// --------------------------------------------------------
+// AFFICHAGE DES RESULTATS
+// --------------------------------------------------------
 
 function afficherResultats(resultats) {
 
-    resultatsRecherche.innerHTML = "";
+    const conteneur =
+        document.getElementById(
+            "resultats-recherche"
+        );
+
+    if (!conteneur) {
+        return;
+    }
+
+    conteneur.innerHTML = "";
+
+    if (resultats.length === 0) {
+
+        const message =
+            document.createElement("p");
+
+        message.textContent =
+            "Aucun chant trouvé.";
+
+        conteneur.appendChild(message);
+
+        return;
+
+    }
+
 
     resultats.forEach(chant => {
 
-        const bouton =
-            document.createElement("button");
+        const resultat =
+            document.createElement("div");
 
-        bouton.type = "button";
+        resultat.className =
+            "resultat-chant";
 
-        bouton.className =
-            "resultat-recherche";
+        resultat.textContent =
+            chant.numero +
+            " - " +
+            chant.titre.replace(/_/g, " ");
 
-        bouton.textContent =
-            chant.numero + " - " + chant.titre;
 
-        bouton.addEventListener(
+        resultat.addEventListener(
             "click",
             () => {
 
                 afficherChant(chant);
 
-                supprimerResultat();
-
             }
         );
 
-        resultatsRecherche.appendChild(
-            bouton
+
+        conteneur.appendChild(
+            resultat
         );
 
     });
@@ -227,307 +385,84 @@ function afficherResultats(resultats) {
 }
 
 
-// ============================================================
-// MESSAGE DE RECHERCHE
-// ============================================================
-
-function afficherMessage(message) {
-
-    resultatsRecherche.innerHTML = "";
-
-    const texte =
-        document.createElement("div");
-
-    texte.className =
-        "message-recherche";
-
-    texte.textContent =
-        message;
-
-    resultatsRecherche.appendChild(
-        texte
-    );
-
-}
-
-
-// ============================================================
-// EFFACER LES RESULTATS
-// ============================================================
-
-function supprimerResultat() {
-
-    resultatsRecherche.innerHTML = "";
-
-}
-
-
-// ============================================================
-// BOUTON X — NUMERO
-// ============================================================
-
-effacerNumero.addEventListener(
-    "click",
-    () => {
-
-        numeroInput.value = "";
-
-        supprimerResultat();
-
-    }
-);
-
-
-// ============================================================
-// BOUTON X — MOT-CLE
-// ============================================================
-
-effacerMotCle.addEventListener(
-    "click",
-    () => {
-
-        motCleInput.value = "";
-
-        supprimerResultat();
-
-    }
-);
-
-
-// ============================================================
-// BOUTON X — LISTE DES CHANTS
-// ============================================================
-
-effacerChant.addEventListener(
-    "click",
-    () => {
-
-        chantSelect.value = "";
-
-        supprimerResultat();
-
-    }
-);
-
-
-// ============================================================
-// SELECTION DANS LA LISTE
-// ============================================================
-
-chantSelect.addEventListener(
-    "change",
-    () => {
-
-        const numero =
-            chantSelect.value;
-
-        if (numero === "") {
-
-            supprimerResultat();
-
-            return;
-        }
-
-        const chant =
-            chants.find(
-                element =>
-                    String(element.numero) === numero
-            );
-
-        if (chant) {
-
-            afficherChant(chant);
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// BOUTON RECHERCHE PAR NUMERO
-// ============================================================
-
-boutonNumero.addEventListener(
-    "click",
-    rechercherNumero
-);
-
-
-// ============================================================
-// BOUTON RECHERCHE PAR MOT-CLE
-// ============================================================
-
-boutonMotCle.addEventListener(
-    "click",
-    rechercherMotCle
-);
-
-
-// ============================================================
-// TOUCHE ENTREE — NUMERO
-// ============================================================
-
-numeroInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-
-            rechercherNumero();
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// TOUCHE ENTREE — MOT-CLE
-// ============================================================
-
-motCleInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-
-            rechercherMotCle();
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// FORMATER LE TEMPS
-// ============================================================
-
-function formaterTemps(secondes) {
-
-    if (!Number.isFinite(secondes)) {
-        return "0:00";
-    }
-
-    const minutes =
-        Math.floor(secondes / 60);
-
-    const secondesRestantes =
-        Math.floor(secondes % 60);
-
-    return (
-        minutes +
-        ":" +
-        String(secondesRestantes).padStart(2, "0")
-    );
-
-}
-
-
-// ============================================================
-// AFFICHER UN CHANT
-// ============================================================
+// --------------------------------------------------------
+// AFFICHAGE DU CHANT SELECTIONNE
+// --------------------------------------------------------
 
 function afficherChant(chant) {
 
-    supprimerResultat();
+    const conteneur =
+        document.getElementById(
+            "chant-selectionne"
+        );
 
-    const ancienResultat =
-        document.querySelector(".result");
-
-    if (ancienResultat) {
-        ancienResultat.remove();
+    if (!conteneur) {
+        return;
     }
 
-
-    const result =
-        document.createElement("div");
-
-    result.className = "result";
+    conteneur.innerHTML = "";
 
 
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // TITRE
-    // --------------------------------------------------------
+    // ----------------------------------------------------
 
     const titre =
         document.createElement("h2");
 
     titre.textContent =
-        chant.numero + " - " + chant.titre;
+        chant.numero +
+        " - " +
+        chant.titre.replace(/_/g, " ");
 
-    result.appendChild(titre);
+    conteneur.appendChild(titre);
 
 
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // LECTEUR AUDIO
-    // --------------------------------------------------------
-
-    const audioPlayer =
-        document.createElement("div");
-
-    audioPlayer.className =
-        "audio-player";
-
+    // ----------------------------------------------------
 
     const audio =
         document.createElement("audio");
 
-    // IMPORTANT :
-    // chants.json contient déjà le chemin complet du MP3
+    audio.preload = "metadata";
+
     audio.src =
         chant.mp3;
 
-    audio.preload =
-        "metadata";
 
+    // ----------------------------------------------------
+    // CONTENEUR DU LECTEUR
+    // ----------------------------------------------------
 
-    // --------------------------------------------------------
-    // CONTROLES
-    // --------------------------------------------------------
-
-    const audioControls =
+    const lecteur =
         document.createElement("div");
 
-    audioControls.className =
-        "audio-controls";
+    lecteur.className =
+        "lecteur-audio";
 
 
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // BOUTON PLAY / PAUSE
-    // --------------------------------------------------------
+    // ----------------------------------------------------
 
-    const playButton =
+    const boutonPlay =
         document.createElement("button");
 
-    playButton.type = "button";
+    boutonPlay.className =
+        "audio-button";
 
-    playButton.className =
-        "player-button";
-
-    playButton.textContent =
+    boutonPlay.textContent =
         "▶";
 
-    playButton.title =
-        "Lecture / Pause";
 
-
-    playButton.addEventListener(
+    boutonPlay.addEventListener(
         "click",
         () => {
 
             if (audio.paused) {
 
-                audio.play()
-                    .catch(error => {
-
-                        console.error(
-                            "Erreur de lecture MP3 :",
-                            error
-                        );
-
-                    });
+                audio.play();
 
             } else {
 
@@ -539,26 +474,43 @@ function afficherChant(chant) {
     );
 
 
-    // --------------------------------------------------------
-    // BOUTON STOP
-    // --------------------------------------------------------
+    audio.addEventListener(
+        "play",
+        () => {
 
-    const stopButton =
+            boutonPlay.textContent =
+                "❚❚";
+
+        }
+    );
+
+
+    audio.addEventListener(
+        "pause",
+        () => {
+
+            boutonPlay.textContent =
+                "▶";
+
+        }
+    );
+
+
+    // ----------------------------------------------------
+    // BOUTON STOP
+    // ----------------------------------------------------
+
+    const boutonStop =
         document.createElement("button");
 
-    stopButton.type = "button";
+    boutonStop.className =
+        "audio-button";
 
-    stopButton.className =
-        "player-button";
-
-    stopButton.textContent =
+    boutonStop.textContent =
         "■";
 
-    stopButton.title =
-        "Arrêter";
 
-
-    stopButton.addEventListener(
+    boutonStop.addEventListener(
         "click",
         () => {
 
@@ -566,75 +518,44 @@ function afficherChant(chant) {
 
             audio.currentTime = 0;
 
-            playButton.textContent =
-                "▶";
-
-            currentTime.textContent =
-                "0:00";
-
-            progressBar.value =
-                "0";
-
         }
     );
 
 
-    // --------------------------------------------------------
-    // TEMPS ACTUEL
-    // --------------------------------------------------------
-
-    const currentTime =
-        document.createElement("span");
-
-    currentTime.className =
-        "time";
-
-    currentTime.textContent =
-        "0:00";
-
-
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // BARRE DE PROGRESSION
-    // --------------------------------------------------------
+    // ----------------------------------------------------
 
-    const progressBar =
+    const barreProgression =
         document.createElement("input");
 
-    progressBar.type =
+    barreProgression.type =
         "range";
 
-    progressBar.className =
+    barreProgression.min =
+        0;
+
+    barreProgression.max =
+        100;
+
+    barreProgression.value =
+        0;
+
+    barreProgression.className =
         "progress-bar";
 
-    progressBar.min =
-        "0";
 
-    progressBar.max =
-        "100";
-
-    progressBar.value =
-        "0";
-
-    progressBar.step =
-        "0.1";
-
-    progressBar.title =
-        "Position dans le morceau";
-
-
-    progressBar.addEventListener(
+    barreProgression.addEventListener(
         "input",
         () => {
 
-            if (Number.isFinite(audio.duration)) {
+            if (audio.duration) {
 
                 audio.currentTime =
-                    audio.duration *
                     (
-                        parseFloat(
-                            progressBar.value
-                        ) / 100
-                    );
+                        barreProgression.value / 100
+                    ) *
+                    audio.duration;
 
             }
 
@@ -642,46 +563,70 @@ function afficherChant(chant) {
     );
 
 
-    // --------------------------------------------------------
-    // DUREE TOTALE
-    // --------------------------------------------------------
+    audio.addEventListener(
+        "timeupdate",
+        () => {
 
-    const totalTime =
+            if (audio.duration) {
+
+                barreProgression.value =
+                    (
+                        audio.currentTime /
+                        audio.duration
+                    ) *
+                    100;
+
+            }
+
+            tempsEcoule.textContent =
+                formaterTemps(
+                    audio.currentTime
+                );
+
+        }
+    );
+
+
+    // ----------------------------------------------------
+    // TEMPS
+    // ----------------------------------------------------
+
+    const tempsEcoule =
         document.createElement("span");
 
-    totalTime.className =
-        "time";
+    tempsEcoule.className =
+        "audio-time";
 
-    totalTime.textContent =
+    tempsEcoule.textContent =
         "0:00";
 
 
-    // --------------------------------------------------------
-    // CONTENEUR PROGRESSION
-    // --------------------------------------------------------
+    const tempsTotal =
+        document.createElement("span");
 
-    const progressContainer =
-        document.createElement("div");
+    tempsTotal.className =
+        "audio-time";
 
-    progressContainer.className =
-        "progress-container";
+    tempsTotal.textContent =
+        "0:00";
 
-    progressContainer.appendChild(
-        currentTime
+
+    audio.addEventListener(
+        "loadedmetadata",
+        () => {
+
+            tempsTotal.textContent =
+                formaterTemps(
+                    audio.duration
+                );
+
+        }
     );
 
-    progressContainer.appendChild(
-        progressBar
-    );
 
-    progressContainer.appendChild(
-        totalTime
-    );
-
-
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // VOLUME
-    // --------------------------------------------------------
+    // ----------------------------------------------------
 
     const volumeContainer =
         document.createElement("div");
@@ -699,9 +644,6 @@ function afficherChant(chant) {
     volumeIcon.textContent =
         "🔊";
 
-    volumeIcon.title =
-        "Couper le son";
-
 
     const volumeBar =
         document.createElement("input");
@@ -709,27 +651,43 @@ function afficherChant(chant) {
     volumeBar.type =
         "range";
 
+    volumeBar.min =
+        0;
+
+    volumeBar.max =
+        1;
+
+    volumeBar.step =
+        0.01;
+
+    volumeBar.value =
+        1;
+
     volumeBar.className =
         "volume-bar";
 
-    volumeBar.min =
-        "0";
 
-    volumeBar.max =
-        "1";
+    volumeBar.addEventListener(
+        "input",
+        () => {
 
-    volumeBar.step =
-        "0.01";
+            audio.volume =
+                volumeBar.value;
 
-    volumeBar.value =
-        "1";
+            if (audio.volume === 0) {
 
-    volumeBar.title =
-        "Volume";
+                volumeIcon.textContent =
+                    "🔇";
 
+            } else {
 
-    // On force le volume initial à 100 %
-    audio.volume = 1;
+                volumeIcon.textContent =
+                    "🔊";
+
+            }
+
+        }
+    );
 
 
     volumeIcon.addEventListener(
@@ -743,62 +701,12 @@ function afficherChant(chant) {
                 volumeIcon.textContent =
                     "🔊";
 
-                volumeIcon.title =
-                    "Couper le son";
-
             } else {
 
                 audio.muted = true;
 
                 volumeIcon.textContent =
                     "🔇";
-
-                volumeIcon.title =
-                    "Rétablir le son";
-
-            }
-
-        }
-    );
-
-
-    volumeBar.addEventListener(
-        "input",
-        () => {
-
-            const nouveauVolume =
-                Math.min(
-                    1,
-                    Math.max(
-                        0,
-                        parseFloat(
-                            volumeBar.value
-                        )
-                    )
-                );
-
-            audio.volume =
-                nouveauVolume;
-
-            if (nouveauVolume === 0) {
-
-                audio.muted = true;
-
-                volumeIcon.textContent =
-                    "🔇";
-
-                volumeIcon.title =
-                    "Rétablir le son";
-
-            } else {
-
-                audio.muted = false;
-
-                volumeIcon.textContent =
-                    "🔊";
-
-                volumeIcon.title =
-                    "Couper le son";
 
             }
 
@@ -815,64 +723,46 @@ function afficherChant(chant) {
     );
 
 
-    // --------------------------------------------------------
-    // VITESSE
-    // --------------------------------------------------------
+    // ----------------------------------------------------
+    // VITESSE DE LECTURE
+    // ----------------------------------------------------
 
-    const speedSelect =
+    const vitesse =
         document.createElement("select");
 
-    speedSelect.className =
+    vitesse.className =
         "speed-select";
-
-    speedSelect.title =
-        "Vitesse de lecture";
 
 
     const vitesses = [
-        {
-            valeur: "0.5",
-            texte: "x0,50"
-        },
-        {
-            valeur: "0.75",
-            texte: "x0,75"
-        },
-        {
-            valeur: "1",
-            texte: "x1"
-        },
-        {
-            valeur: "1.25",
-            texte: "x1,25"
-        },
-        {
-            valeur: "1.5",
-            texte: "x1,50"
-        }
+        ["0.5", "x0,50"],
+        ["0.75", "x0,75"],
+        ["1", "x1"],
+        ["1.25", "x1,25"],
+        ["1.5", "x1,50"]
     ];
 
 
     vitesses.forEach(
-        vitesse => {
+        valeur => {
 
             const option =
                 document.createElement("option");
 
             option.value =
-                vitesse.valeur;
+                valeur[0];
 
             option.textContent =
-                vitesse.texte;
+                valeur[1];
 
-            if (vitesse.valeur === "1") {
+            if (valeur[0] === "1") {
 
                 option.selected =
                     true;
 
             }
 
-            speedSelect.appendChild(
+            vitesse.appendChild(
                 option
             );
 
@@ -880,202 +770,64 @@ function afficherChant(chant) {
     );
 
 
-    speedSelect.addEventListener(
+    vitesse.addEventListener(
         "change",
         () => {
 
             audio.playbackRate =
-                parseFloat(
-                    speedSelect.value
+                Number(
+                    vitesse.value
                 );
 
         }
     );
 
 
-    // --------------------------------------------------------
-    // ASSEMBLAGE DES CONTROLES
-    // --------------------------------------------------------
+    // ----------------------------------------------------
+    // ASSEMBLAGE DU LECTEUR
+    // ----------------------------------------------------
 
-    audioControls.appendChild(
-        playButton
+    lecteur.appendChild(
+        boutonPlay
     );
 
-    audioControls.appendChild(
-        stopButton
+    lecteur.appendChild(
+        boutonStop
     );
 
-    audioControls.appendChild(
-        progressContainer
+    lecteur.appendChild(
+        tempsEcoule
     );
 
-    audioControls.appendChild(
+    lecteur.appendChild(
+        barreProgression
+    );
+
+    lecteur.appendChild(
+        tempsTotal
+    );
+
+    lecteur.appendChild(
         volumeContainer
     );
 
-    audioControls.appendChild(
-        speedSelect
+    lecteur.appendChild(
+        vitesse
     );
 
 
-    audioPlayer.appendChild(
-        audioControls
+    conteneur.appendChild(
+        lecteur
+    );
+
+    conteneur.appendChild(
+        audio
     );
 
 
-    // --------------------------------------------------------
-    // EVENEMENTS AUDIO
-    // --------------------------------------------------------
-
-    audio.addEventListener(
-        "loadedmetadata",
-        () => {
-
-            totalTime.textContent =
-                formaterTemps(
-                    audio.duration
-                );
-
-            audio.volume =
-                1;
-
-            volumeBar.value =
-                "1";
-
-            audio.muted =
-                false;
-
-            volumeIcon.textContent =
-                "🔊";
-
-            volumeIcon.title =
-                "Couper le son";
-
-            audio.playbackRate =
-                1;
-
-            speedSelect.value =
-                "1";
-
-        }
-    );
-
-
-    audio.addEventListener(
-        "timeupdate",
-        () => {
-
-            currentTime.textContent =
-                formaterTemps(
-                    audio.currentTime
-                );
-
-            if (
-                Number.isFinite(audio.duration) &&
-                audio.duration > 0
-            ) {
-
-                progressBar.value =
-                    (
-                        audio.currentTime /
-                        audio.duration *
-                        100
-                    );
-
-            }
-
-        }
-    );
-
-
-    audio.addEventListener(
-        "play",
-        () => {
-
-            playButton.textContent =
-                "❚❚";
-
-        }
-    );
-
-
-    audio.addEventListener(
-        "pause",
-        () => {
-
-            playButton.textContent =
-                "▶";
-
-        }
-    );
-
-
-    audio.addEventListener(
-        "ended",
-        () => {
-
-            playButton.textContent =
-                "▶";
-
-            progressBar.value =
-                "0";
-
-            currentTime.textContent =
-                "0:00";
-
-        }
-    );
-
-
-    audio.addEventListener(
-        "error",
-        () => {
-
-            console.error(
-                "Impossible de charger le MP3 :",
-                chant.mp3
-            );
-
-        }
-    );
-
-
-    // --------------------------------------------------------
-    // AJOUT DU LECTEUR
-    // --------------------------------------------------------
-
-    result.appendChild(
-        audioPlayer
-    );
-
-
-    // --------------------------------------------------------
-    // BOUTON TELECHARGEMENT MP3
-    // --------------------------------------------------------
-
-    const downloadMp3Button =
-        document.createElement("a");
-
-    downloadMp3Button.className =
-        "download-button";
-
-    downloadMp3Button.href =
-        chant.mp3;
-
-    downloadMp3Button.download =
-        "";
-
-    downloadMp3Button.textContent =
-        "Télécharger le MP3";
-
-    result.appendChild(
-        downloadMp3Button
-    );
-
-
-    // --------------------------------------------------------
+    // ----------------------------------------------------
     // BOUTON TELECHARGEMENT PDF
-    // --------------------------------------------------------
+    // ----------------------------------------------------
 
     const downloadPdfButton =
         document.createElement("a");
@@ -1086,29 +838,64 @@ function afficherChant(chant) {
     downloadPdfButton.href =
         chant.pdf;
 
-    downloadPdfButton.download =
-        "";
+    downloadPdfButton.target =
+        "_blank";
+
+    downloadPdfButton.rel =
+        "noopener";
 
     downloadPdfButton.textContent =
         "Télécharger la partition PDF";
 
 
-    result.appendChild(
+    conteneur.appendChild(
         downloadPdfButton
     );
 
 
-    // --------------------------------------------------------
-    // AJOUT DE LA ZONE DU CHANT A LA PAGE
-    // --------------------------------------------------------
+    // ----------------------------------------------------
+    // REMONTER VERS LE CHANT
+    // ----------------------------------------------------
 
-    document
-        .querySelector(".search-box")
-        .after(result);
+    conteneur.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 
 }
 
 
-// ============================================================
-// FIN DU SCRIPT
-// ============================================================
+// --------------------------------------------------------
+// FORMATAGE DU TEMPS
+// --------------------------------------------------------
+
+function formaterTemps(secondes) {
+
+    if (!Number.isFinite(secondes)) {
+
+        return "0:00";
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            secondes / 60
+        );
+
+
+    const secondesRestantes =
+        Math.floor(
+            secondes % 60
+        );
+
+
+    return (
+        minutes +
+        ":" +
+        String(
+            secondesRestantes
+        ).padStart(2, "0")
+    );
+
+}
