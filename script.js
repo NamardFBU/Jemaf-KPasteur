@@ -6,6 +6,23 @@ let chants = [];
 
 
 // --------------------------------------------------------
+// INDICATION AU-DESSUS DES RESULTATS
+// --------------------------------------------------------
+
+const aideResultats =
+    document.querySelector(".aide-resultats");
+
+
+if (aideResultats) {
+
+    aideResultats.innerHTML =
+        '<span class="fleche-aide">➡️</span>' +
+        '<span>Cliquez sur le résultat ci-dessous, et voir en bas le lecteur :</span>';
+
+}
+
+
+// --------------------------------------------------------
 // NORMALISATION DU TEXTE
 // --------------------------------------------------------
 
@@ -120,11 +137,8 @@ function rechercherParNumero() {
         champNumero.value.trim();
 
     if (!numero) {
-
         afficherResultats([]);
-
         return;
-
     }
 
     const resultats =
@@ -209,11 +223,8 @@ function rechercherParMotCle() {
         );
 
     if (!recherche) {
-
         afficherResultats([]);
-
         return;
-
     }
 
     const resultats =
@@ -836,19 +847,93 @@ function afficherChant(chant) {
     // ----------------------------------------------------
 
     const downloadPdfButton =
-        document.createElement("a");
+        document.createElement("button");
 
     downloadPdfButton.className =
         "download-button";
 
-    downloadPdfButton.href =
-        chant.pdf;
-
-    downloadPdfButton.download =
-        "";
+    downloadPdfButton.type =
+        "button";
 
     downloadPdfButton.textContent =
         "Télécharger la partition PDF";
+
+
+    downloadPdfButton.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                const response =
+                    await fetch(chant.pdf);
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Impossible de récupérer le PDF."
+                    );
+
+                }
+
+
+                const blob =
+                    await response.blob();
+
+
+                const url =
+                    URL.createObjectURL(blob);
+
+
+                const lien =
+                    document.createElement("a");
+
+
+                lien.href =
+                    url;
+
+
+                lien.download =
+                    chant.numero +
+                    " - " +
+                    chant.titre.replace(/_/g, " ") +
+                    ".pdf";
+
+
+                document.body.appendChild(
+                    lien
+                );
+
+
+                lien.click();
+
+
+                lien.remove();
+
+
+                setTimeout(
+                    () => URL.revokeObjectURL(url),
+                    1000
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erreur lors du téléchargement du PDF :",
+                    error
+                );
+
+
+                alert(
+                    "Impossible de télécharger la partition PDF."
+                );
+
+            }
+
+        }
+    );
 
 
     conteneur.appendChild(

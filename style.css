@@ -2,586 +2,530 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
     padding: 20px;
-    font-family: Arial, sans-serif;
-    background: #f2f4f7;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f4f6f8;
     color: #222;
 }
 
+
 .container {
-    width: 100%;
-    max-width: 700px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
+
 h1 {
     text-align: center;
-    margin: 10px 0 30px;
-    font-size: 32px;
+
+    margin:
+        10px 0 25px;
 }
 
 
-/* ============================================================
-   GRANDE BOITE PRINCIPALE
-   ============================================================ */
+/* --------------------------------------------------------
+   ZONE DE RECHERCHE
+   -------------------------------------------------------- */
 
 .search-box {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-
-/* ============================================================
-   SOUS-BOITES DE RECHERCHE
-   ============================================================ */
 
 .search-section {
-    background: #f7f8fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 15px;
-}
-
-.choix-chant {
-    margin-top: 20px;
-    margin-bottom: 0;
+    margin-bottom: 18px;
 }
 
 
-/* ============================================================
-   LABELS
-   ============================================================ */
-
-label {
+.search-section label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+
+    margin-bottom: 7px;
+
+    font-weight: 600;
 }
 
-
-/* ============================================================
-   CHAMPS
-   ============================================================ */
-
-input,
-select {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    background: white;
-}
-
-
-/* ============================================================
-   LIGNE CHAMP + BOUTONS
-   ============================================================ */
 
 .search-line {
     display: flex;
+
     gap: 8px;
-    align-items: stretch;
+
+    align-items: center;
 }
+
+
+input[type="number"],
+input[type="text"],
+select {
+    min-width: 0;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid #bfc5cc;
+
+    border-radius: 7px;
+
+    background: #fff;
+
+    font-size: 16px;
+}
+
 
 .search-line input {
     flex: 1;
-    min-width: 0;
 }
 
 
-/* ============================================================
-   BOUTONS RECHERCHER
-   ============================================================ */
+/* --------------------------------------------------------
+   BOUTONS DE RECHERCHE
+   -------------------------------------------------------- */
 
-.search-line button {
-    padding: 13px 18px;
+button {
     border: none;
-    border-radius: 8px;
-    background: #1f6feb;
-    color: white;
+
+    border-radius: 7px;
+
+    padding:
+        10px 14px;
+
     font-size: 16px;
-    font-weight: bold;
+
     cursor: pointer;
 }
 
-.search-line button:hover {
-    background: #1558b0;
+
+#boutonNumero,
+#boutonMotCle {
+    background: #1976d2;
+
+    color: white;
 }
 
 
-/* ============================================================
-   PETITS BOUTONS X
-   ============================================================ */
+#boutonNumero:hover,
+#boutonMotCle:hover {
+    background: #1565c0;
+}
 
-.search-line .clear-button {
-    width: 42px;
-    min-width: 42px;
-    padding: 0;
-    background: #e5e7eb;
+
+/* --------------------------------------------------------
+   BOUTONS EFFACER
+   -------------------------------------------------------- */
+
+.clear-button,
+.clear-select-button {
+    background: #e8ebee;
+
     color: #555;
-    font-size: 24px;
-    font-weight: normal;
+
+    width: 40px;
+
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+.clear-button:hover,
+.clear-select-button:hover {
+    background: #d9dde1;
+}
+
+
+/* --------------------------------------------------------
+   INDICATION POUR LES RESULTATS
+   -------------------------------------------------------- */
+
+.aide-resultats {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin:
+        18px 0 9px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    color: #333;
+}
+
+
+.fleche-aide {
+    flex-shrink: 0;
+
+    font-size: 25px;
+
     line-height: 1;
 }
 
-.search-line .clear-button:hover {
-    background: #d1d5db;
-    color: #222;
+
+/* --------------------------------------------------------
+   ZONE DES CHANTS RESULTATS
+   -------------------------------------------------------- */
+
+#resultats-recherche {
+    background: #fff4cc;
+
+    border:
+        2px solid #e0b83f;
+
+    border-radius: 10px;
+
+    padding:
+        10px 12px;
+
+    margin-top: 5px;
+
+    margin-bottom: 20px;
 }
 
 
-/* ============================================================
-   LISTE DEROULANTE + BOUTON ANNULER
-   ============================================================ */
+/* --------------------------------------------------------
+   CHANTS CLIQUABLES
+   -------------------------------------------------------- */
+
+.resultat-chant {
+    cursor: pointer;
+
+    padding:
+        12px 13px;
+
+    margin:
+        5px 0;
+
+    background: #fffaf0;
+
+    border:
+        1px solid #ead79a;
+
+    border-radius: 7px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #333;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease;
+}
+
+
+.resultat-chant:hover {
+    background: #ffe9a6;
+}
+
+
+.resultat-chant:active {
+    transform: scale(0.99);
+}
+
+
+/* --------------------------------------------------------
+   LISTE DEROULANTE
+   -------------------------------------------------------- */
+
+.choix-chant {
+    margin-top: 8px;
+}
+
 
 .select-line {
     display: flex;
+
+    align-items: center;
+
     gap: 8px;
-    align-items: stretch;
 }
+
 
 .select-line select {
     flex: 1;
-    min-width: 0;
-}
 
-.clear-select-button {
-    width: 42px;
-    min-width: 42px;
-    padding: 0;
-    border: none;
-    border-radius: 8px;
-    background: #e5e7eb;
-    color: #555;
-    font-size: 24px;
-    font-weight: normal;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.clear-select-button:hover {
-    background: #d1d5db;
-    color: #222;
+    max-width: 100%;
 }
 
 
-/* ============================================================
-   ZONE DES RESULTATS DE RECHERCHE
-   ============================================================ */
-
-#resultats-recherche {
-    margin-top: 5px;
-    margin-bottom: 20px;
-    padding: 16px;
-    background: rgba(190, 224, 255, 0.95);
-    border: 2px solid #7eb5e5;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(31, 111, 235, 0.12);
-}
-
-
-/* ============================================================
-   RESULTAT INDIVIDUEL
-   ============================================================ */
-
-.resultat-chant {
-    display: block;
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    border: 1px solid #9fc9ee;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.95);
-    text-align: left;
-    font-size: 16px;
-
-    /* IMPORTANT : le résultat est cliquable */
-    cursor: pointer;
-
-    transition:
-        background 0.15s ease,
-        border-color 0.15s ease,
-        transform 0.05s ease;
-}
-
-.resultat-chant:last-child {
-    margin-bottom: 0;
-}
-
-.resultat-chant:hover {
-    background: white;
-    border-color: #6faee0;
-}
-
-.resultat-chant:active {
-    transform: translateY(1px);
-}
-
-.message-recherche {
-    padding: 4px 0;
-    color: #444;
-}
-
-
-/* ============================================================
-   ZONE DU CHANT SELECTIONNE
-   ============================================================ */
+/* --------------------------------------------------------
+   CHANT SELECTIONNE
+   -------------------------------------------------------- */
 
 #chant-selectionne {
-    margin-top: 20px;
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-top: 25px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
 }
+
 
 #chant-selectionne h2 {
-    margin: 0 0 20px 0;
-    font-size: 24px;
-    line-height: 1.3;
+    margin-top: 0;
+
+    margin-bottom: 18px;
 }
 
 
-/* ============================================================
-   LECTEUR MP3 PERSONNALISE
-   ============================================================ */
+/* --------------------------------------------------------
+   LECTEUR AUDIO
+   -------------------------------------------------------- */
 
 .lecteur-audio {
-    width: 100%;
     display: flex;
+
     align-items: center;
+
     gap: 8px;
-    padding: 18px;
-    background: #f7f8fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 12px;
+
+    width: 100%;
+
+    padding: 12px;
+
+    background: #eef5fb;
+
+    border:
+        1px solid #cbdceb;
+
+    border-radius: 9px;
 }
 
 
-/* ============================================================
-   BOUTONS PLAY / PAUSE / STOP
-   ============================================================ */
+/* --------------------------------------------------------
+   BOUTONS AUDIO
+   -------------------------------------------------------- */
 
 .audio-button {
-    width: 44px;
-    min-width: 44px;
+    flex-shrink: 0;
+
+    width: 42px;
+
     height: 42px;
+
     padding: 0;
-    border: none;
-    border-radius: 8px;
-    background: #1f6feb;
+
+    background: #1976d2;
+
     color: white;
+
     font-size: 18px;
-    cursor: pointer;
 }
+
 
 .audio-button:hover {
-    background: #1558b0;
-}
-
-.audio-button:active {
-    transform: translateY(1px);
+    background: #1565c0;
 }
 
 
-/* ============================================================
+/* --------------------------------------------------------
    TEMPS AUDIO
-   ============================================================ */
+   -------------------------------------------------------- */
 
 .audio-time {
-    width: 42px;
-    min-width: 42px;
-    font-size: 13px;
+    flex-shrink: 0;
+
+    min-width: 40px;
+
     text-align: center;
-    color: #555;
+
+    font-size: 14px;
 }
 
 
-/* ============================================================
+/* --------------------------------------------------------
    BARRE DE PROGRESSION
-   ============================================================ */
+   -------------------------------------------------------- */
 
 .progress-bar {
     flex: 1;
-    min-width: 80px;
-    width: auto;
-    height: 24px;
-    margin: 0 3px;
-    padding: 0;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: none;
-}
 
-.progress-bar::-webkit-slider-runnable-track {
-    height: 6px;
-    border-radius: 3px;
-    background: #d2d6dc;
-}
-
-.progress-bar::-moz-range-track {
-    height: 6px;
-    border-radius: 3px;
-    background: #d2d6dc;
-}
-
-.progress-bar::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    margin-top: -5px;
-    border: none;
-    border-radius: 50%;
-    background: #1f6feb;
-    cursor: pointer;
-}
-
-.progress-bar::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border: none;
-    border-radius: 50%;
-    background: #1f6feb;
-    cursor: pointer;
+    min-width: 60px;
 }
 
 
-/* ============================================================
+/* --------------------------------------------------------
    VOLUME
-   ============================================================ */
+   -------------------------------------------------------- */
 
 .volume-container {
     display: flex;
+
     align-items: center;
-    gap: 6px;
+
+    gap: 5px;
+
     flex-shrink: 0;
 }
 
+
 .volume-icon {
-    width: 24px;
-    min-width: 24px;
-    font-size: 18px;
-    text-align: center;
     cursor: pointer;
+
+    font-size: 20px;
+
     user-select: none;
 }
 
+
 .volume-bar {
-    width: 80px;
-    min-width: 60px;
-    height: 20px;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: none;
+    width: 75px;
 }
 
 
-/* ============================================================
-   BARRE DE VOLUME
-   ============================================================ */
-
-.volume-bar::-webkit-slider-runnable-track {
-    height: 6px;
-    border-radius: 3px;
-    background: #d2d6dc;
-}
-
-.volume-bar::-moz-range-track {
-    height: 6px;
-    border-radius: 3px;
-    background: #d2d6dc;
-}
-
-.volume-bar::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    margin-top: -4px;
-    border: none;
-    border-radius: 50%;
-    background: #1f6feb;
-    cursor: pointer;
-}
-
-.volume-bar::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border: none;
-    border-radius: 50%;
-    background: #1f6feb;
-    cursor: pointer;
-}
-
-
-/* ============================================================
-   VITESSE DE LECTURE
-   ============================================================ */
+/* --------------------------------------------------------
+   VITESSE
+   -------------------------------------------------------- */
 
 .speed-select {
-    width: auto;
-    min-width: 85px;
-    padding: 8px;
-    font-size: 14px;
     flex-shrink: 0;
+
+    padding:
+        7px 8px;
+
+    font-size: 14px;
 }
 
 
-/* ============================================================
-   ELEMENT AUDIO NATIF
-   ============================================================ */
-
-/*
-   Le vrai élément <audio> est utilisé par JavaScript
-   uniquement comme moteur de lecture.
-   On ne veut pas afficher son lecteur natif.
-*/
+/* --------------------------------------------------------
+   CACHER LE LECTEUR AUDIO NATIF
+   -------------------------------------------------------- */
 
 #chant-selectionne > audio {
     display: none;
 }
 
 
-/* ============================================================
-   BOUTONS DE TELECHARGEMENT
-   ============================================================ */
+/* --------------------------------------------------------
+   BOUTON TELECHARGEMENT PDF
+   -------------------------------------------------------- */
 
 .download-button {
-    display: block;
-    width: 100%;
+    display: inline-block;
+
     margin-top: 18px;
-    padding: 14px;
-    text-align: center;
-    background: #1f6feb;
+
+    background: #1976d2;
+
     color: white;
+
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
+
+    border: none;
+
+    border-radius: 7px;
+
+    padding:
+        11px 16px;
+
+    font-size: 16px;
+
     cursor: pointer;
 }
 
+
 .download-button:hover {
-    background: #1558b0;
+    background: #1565c0;
 }
 
 
-/* ============================================================
-   TEXTE D'AIDE
-   ============================================================ */
-
-.aide-resultats {
-    margin: 0 0 5px 0;
-    font-size: 13px;
-    font-style: italic;
-    color: #555;
-}
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
+/* --------------------------------------------------------
+   AFFICHAGE MOBILE
+   -------------------------------------------------------- */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 12px;
+        padding: 10px;
     }
 
-    h1 {
-        font-size: 27px;
-        margin-bottom: 20px;
-    }
 
-    .search-box {
-        padding: 12px;
-        border-radius: 12px;
-    }
-
-    .search-section {
+    .search-box,
+    #chant-selectionne {
         padding: 15px;
     }
 
+
     .search-line {
-        flex-direction: column;
-        gap: 8px;
+        flex-wrap: wrap;
     }
+
 
     .search-line input {
         width: 100%;
+
+        flex-basis: 100%;
     }
 
-    .search-line button {
-        width: 100%;
-    }
 
-    .search-line .clear-button {
-        width: 100%;
-        min-width: 0;
-        height: 40px;
-    }
-
-    .select-line {
-        flex-direction: row;
-    }
-
-    .select-line select {
-        width: auto;
+    .search-line button:not(.clear-button) {
         flex: 1;
     }
 
-    .clear-select-button {
-        width: 42px;
-        min-width: 42px;
-        height: auto;
+
+    .aide-resultats {
+        font-size: 16px;
+
+        align-items: flex-start;
     }
 
-    #resultats-recherche {
-        padding: 12px;
+
+    .fleche-aide {
+        font-size: 23px;
     }
 
-    #chant-selectionne {
-        padding: 18px;
-        border-radius: 12px;
-    }
-
-    #chant-selectionne h2 {
-        font-size: 21px;
-    }
 
     .lecteur-audio {
         flex-wrap: wrap;
-        padding: 14px;
     }
+
 
     .progress-bar {
-        order: 10;
+        order: 3;
+
         flex-basis: 100%;
-        min-width: 100%;
-    }
 
-    .volume-container {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .volume-bar {
         width: 100%;
     }
 
-    .speed-select {
-        min-width: 80px;
+
+    .volume-container {
+        margin-left: auto;
     }
+
+
+    .volume-bar {
+        width: 65px;
+    }
+
+
+    .speed-select {
+        margin-left: auto;
+    }
+
 }
