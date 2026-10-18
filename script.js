@@ -6,79 +6,19 @@ let chants = [];
 
 
 // --------------------------------------------------------
-// AMPLIFICATION AUDIO
-// --------------------------------------------------------
-
-let contexteAudio = null;
-
-function preparerAmplification(audio) {
-    const AudioContextDisponible =
-        window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContextDisponible) {
-        return false;
-    }
-
-    // Chaque élément audio ne doit être connecté qu'une seule fois.
-    if (audio.dataset.amplificationPreparee === "oui") {
-        return true;
-    }
-
-    try {
-        if (!contexteAudio) {
-            contexteAudio = new AudioContextDisponible();
-        }
-
-        const sourceAudio =
-            contexteAudio.createMediaElementSource(audio);
-
-        const gainAudio =
-            contexteAudio.createGain();
-
-        const compresseurAudio =
-            contexteAudio.createDynamicsCompressor();
-
-        // Amplification de base : x1,8.
-        gainAudio.gain.value = 1.8;
-
-        // Réduction des crêtes pour limiter le risque de saturation.
-        compresseurAudio.threshold.value = -10;
-        compresseurAudio.knee.value = 6;
-        compresseurAudio.ratio.value = 12;
-        compresseurAudio.attack.value = 0.003;
-        compresseurAudio.release.value = 0.25;
-
-        // Chaîne audio : amplification puis compression.
-        sourceAudio.connect(gainAudio);
-        gainAudio.connect(compresseurAudio);
-        compresseurAudio.connect(contexteAudio.destination);
-
-        audio.dataset.amplificationPreparee = "oui";
-
-        return true;
-
-    } catch (error) {
-        console.error(
-            "Impossible d'activer l'amplification audio :",
-            error
-        );
-
-        return false;
-    }
-}
-
-
-// --------------------------------------------------------
 // INDICATION AU-DESSUS DES RESULTATS
 // --------------------------------------------------------
 
 const aideResultats =
     document.querySelector(".aide-resultats");
 
+
 if (aideResultats) {
+
     aideResultats.innerHTML =
         '<span class="fleche-aide">➡️</span>' +
         '<span>Cliquez sur le résultat ci-dessous, et voir en bas le lecteur :</span>';
+
 }
 
 
@@ -87,10 +27,12 @@ if (aideResultats) {
 // --------------------------------------------------------
 
 function normaliserTexte(texte) {
+
     return texte
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
+
 }
 
 
@@ -101,14 +43,19 @@ function normaliserTexte(texte) {
 fetch("chants.json")
     .then(response => response.json())
     .then(data => {
+
         chants = data;
+
         remplirListeChants();
+
     })
     .catch(error => {
+
         console.error(
             "Erreur lors du chargement des chants :",
             error
         );
+
     });
 
 
@@ -117,6 +64,7 @@ fetch("chants.json")
 // --------------------------------------------------------
 
 function remplirListeChants() {
+
     const select =
         document.getElementById("chant");
 
@@ -125,6 +73,7 @@ function remplirListeChants() {
     }
 
     chants.forEach(chant => {
+
         const option =
             document.createElement("option");
 
@@ -137,7 +86,9 @@ function remplirListeChants() {
             chant.titre.replace(/_/g, " ");
 
         select.appendChild(option);
+
     });
+
 }
 
 
@@ -151,25 +102,37 @@ const boutonNumero =
 const champNumero =
     document.getElementById("numero");
 
+
 if (boutonNumero) {
+
     boutonNumero.addEventListener(
         "click",
         rechercherParNumero
     );
+
 }
 
+
 if (champNumero) {
+
     champNumero.addEventListener(
         "keydown",
         event => {
+
             if (event.key === "Enter") {
+
                 rechercherParNumero();
+
             }
+
         }
     );
+
 }
 
+
 function rechercherParNumero() {
+
     const numero =
         champNumero.value.trim();
 
@@ -185,6 +148,7 @@ function rechercherParNumero() {
         );
 
     afficherResultats(resultats);
+
 }
 
 
@@ -195,14 +159,20 @@ function rechercherParNumero() {
 const effacerNumero =
     document.getElementById("effacerNumero");
 
+
 if (effacerNumero) {
+
     effacerNumero.addEventListener(
         "click",
         () => {
+
             champNumero.value = "";
+
             afficherResultats([]);
+
         }
     );
+
 }
 
 
@@ -216,25 +186,37 @@ const boutonMotCle =
 const champMotCle =
     document.getElementById("motCle");
 
+
 if (boutonMotCle) {
+
     boutonMotCle.addEventListener(
         "click",
         rechercherParMotCle
     );
+
 }
 
+
 if (champMotCle) {
+
     champMotCle.addEventListener(
         "keydown",
         event => {
+
             if (event.key === "Enter") {
+
                 rechercherParMotCle();
+
             }
+
         }
     );
+
 }
 
+
 function rechercherParMotCle() {
+
     const recherche =
         normaliserTexte(
             champMotCle.value.trim()
@@ -247,6 +229,7 @@ function rechercherParMotCle() {
 
     const resultats =
         chants.filter(chant => {
+
             const titre =
                 normaliserTexte(
                     chant.titre.replace(/_/g, " ")
@@ -259,9 +242,11 @@ function rechercherParMotCle() {
                 titre.includes(recherche) ||
                 numero.includes(recherche)
             );
+
         });
 
     afficherResultats(resultats);
+
 }
 
 
@@ -272,14 +257,20 @@ function rechercherParMotCle() {
 const effacerMotCle =
     document.getElementById("effacerMotCle");
 
+
 if (effacerMotCle) {
+
     effacerMotCle.addEventListener(
         "click",
         () => {
+
             champMotCle.value = "";
+
             afficherResultats([]);
+
         }
     );
+
 }
 
 
@@ -290,10 +281,13 @@ if (effacerMotCle) {
 const listeChants =
     document.getElementById("chant");
 
+
 if (listeChants) {
+
     listeChants.addEventListener(
         "change",
         () => {
+
             const numero =
                 listeChants.value;
 
@@ -308,10 +302,14 @@ if (listeChants) {
                 );
 
             if (chant) {
+
                 afficherResultats([chant]);
+
             }
+
         }
     );
+
 }
 
 
@@ -322,14 +320,20 @@ if (listeChants) {
 const boutonEffacerListe =
     document.getElementById("effacerChant");
 
+
 if (boutonEffacerListe) {
+
     boutonEffacerListe.addEventListener(
         "click",
         () => {
+
             listeChants.value = "";
+
             afficherResultats([]);
+
         }
     );
+
 }
 
 
@@ -338,6 +342,7 @@ if (boutonEffacerListe) {
 // --------------------------------------------------------
 
 function afficherResultats(resultats) {
+
     const conteneur =
         document.getElementById(
             "resultats-recherche"
@@ -350,6 +355,7 @@ function afficherResultats(resultats) {
     conteneur.innerHTML = "";
 
     if (resultats.length === 0) {
+
         const message =
             document.createElement("p");
 
@@ -359,9 +365,12 @@ function afficherResultats(resultats) {
         conteneur.appendChild(message);
 
         return;
+
     }
 
+
     resultats.forEach(chant => {
+
         const resultat =
             document.createElement("div");
 
@@ -373,15 +382,23 @@ function afficherResultats(resultats) {
             " - " +
             chant.titre.replace(/_/g, " ");
 
+
         resultat.addEventListener(
             "click",
             () => {
+
                 afficherChant(chant);
+
             }
         );
 
-        conteneur.appendChild(resultat);
+
+        conteneur.appendChild(
+            resultat
+        );
+
     });
+
 }
 
 
@@ -390,6 +407,7 @@ function afficherResultats(resultats) {
 // --------------------------------------------------------
 
 function afficherChant(chant) {
+
     const conteneur =
         document.getElementById(
             "chant-selectionne"
@@ -400,6 +418,7 @@ function afficherChant(chant) {
     }
 
     conteneur.innerHTML = "";
+
 
     // ----------------------------------------------------
     // TITRE
@@ -453,52 +472,43 @@ function afficherChant(chant) {
     boutonPlay.textContent =
         "▶";
 
+
     boutonPlay.addEventListener(
         "click",
-        async () => {
+        () => {
+
             if (audio.paused) {
 
-                // Préparer l'amplification au premier clic sur Lecture.
-                // Cela respecte les restrictions audio des navigateurs,
-                // notamment sur iPhone.
-                preparerAmplification(audio);
-
-                try {
-                    if (
-                        contexteAudio &&
-                        contexteAudio.state === "suspended"
-                    ) {
-                        await contexteAudio.resume();
-                    }
-
-                    await audio.play();
-
-                } catch (error) {
-                    console.error(
-                        "Erreur lors du démarrage de la lecture :",
-                        error
-                    );
-                }
+                audio.play();
 
             } else {
+
                 audio.pause();
+
             }
+
         }
     );
+
 
     audio.addEventListener(
         "play",
         () => {
+
             boutonPlay.textContent =
                 "❚❚";
+
         }
     );
+
 
     audio.addEventListener(
         "pause",
         () => {
+
             boutonPlay.textContent =
                 "▶";
+
         }
     );
 
@@ -516,11 +526,15 @@ function afficherChant(chant) {
     boutonStop.textContent =
         "■";
 
+
     boutonStop.addEventListener(
         "click",
         () => {
+
             audio.pause();
+
             audio.currentTime = 0;
+
         }
     );
 
@@ -547,35 +561,45 @@ function afficherChant(chant) {
     barreProgression.className =
         "progress-bar";
 
+
     barreProgression.addEventListener(
         "input",
         () => {
+
             if (audio.duration) {
+
                 audio.currentTime =
                     (
                         barreProgression.value / 100
                     ) *
                     audio.duration;
+
             }
+
         }
     );
+
 
     audio.addEventListener(
         "timeupdate",
         () => {
+
             if (audio.duration) {
+
                 barreProgression.value =
                     (
                         audio.currentTime /
                         audio.duration
                     ) *
                     100;
+
             }
 
             tempsEcoule.textContent =
                 formaterTemps(
                     audio.currentTime
                 );
+
         }
     );
 
@@ -593,6 +617,7 @@ function afficherChant(chant) {
     tempsEcoule.textContent =
         "0:00";
 
+
     const tempsTotal =
         document.createElement("span");
 
@@ -602,13 +627,16 @@ function afficherChant(chant) {
     tempsTotal.textContent =
         "0:00";
 
+
     audio.addEventListener(
         "loadedmetadata",
         () => {
+
             tempsTotal.textContent =
                 formaterTemps(
                     audio.duration
                 );
+
         }
     );
 
@@ -623,6 +651,7 @@ function afficherChant(chant) {
     volumeContainer.className =
         "volume-container";
 
+
     const volumeIcon =
         document.createElement("span");
 
@@ -631,6 +660,7 @@ function afficherChant(chant) {
 
     volumeIcon.textContent =
         "🔊";
+
 
     const volumeBar =
         document.createElement("input");
@@ -653,39 +683,53 @@ function afficherChant(chant) {
     volumeBar.className =
         "volume-bar";
 
+
     volumeBar.addEventListener(
         "input",
         () => {
+
             audio.volume =
                 volumeBar.value;
 
             if (audio.volume === 0) {
+
                 volumeIcon.textContent =
                     "🔇";
+
             } else {
+
                 volumeIcon.textContent =
                     "🔊";
+
             }
+
         }
     );
+
 
     volumeIcon.addEventListener(
         "click",
         () => {
+
             if (audio.muted) {
+
                 audio.muted = false;
 
                 volumeIcon.textContent =
                     "🔊";
 
             } else {
+
                 audio.muted = true;
 
                 volumeIcon.textContent =
                     "🔇";
+
             }
+
         }
     );
+
 
     volumeContainer.appendChild(
         volumeIcon
@@ -706,6 +750,7 @@ function afficherChant(chant) {
     vitesse.className =
         "speed-select";
 
+
     const vitesses = [
         ["0.5", "x0,50"],
         ["0.75", "x0,75"],
@@ -714,8 +759,10 @@ function afficherChant(chant) {
         ["1.5", "x1,50"]
     ];
 
+
     vitesses.forEach(
         valeur => {
+
             const option =
                 document.createElement("option");
 
@@ -726,19 +773,29 @@ function afficherChant(chant) {
                 valeur[1];
 
             if (valeur[0] === "1") {
+
                 option.selected =
                     true;
+
             }
 
-            vitesse.appendChild(option);
+            vitesse.appendChild(
+                option
+            );
+
         }
     );
+
 
     vitesse.addEventListener(
         "change",
         () => {
+
             audio.playbackRate =
-                Number(vitesse.value);
+                Number(
+                    vitesse.value
+                );
+
         }
     );
 
@@ -775,6 +832,7 @@ function afficherChant(chant) {
         vitesse
     );
 
+
     conteneur.appendChild(
         lecteur
     );
@@ -800,30 +858,41 @@ function afficherChant(chant) {
     downloadPdfButton.textContent =
         "Télécharger la partition PDF";
 
+
     downloadPdfButton.addEventListener(
         "click",
         async () => {
+
             try {
+
                 const response =
                     await fetch(chant.pdf);
 
+
                 if (!response.ok) {
+
                     throw new Error(
                         "Impossible de récupérer le PDF."
                     );
+
                 }
+
 
                 const blob =
                     await response.blob();
 
+
                 const url =
                     URL.createObjectURL(blob);
+
 
                 const lien =
                     document.createElement("a");
 
+
                 lien.href =
                     url;
+
 
                 lien.download =
                     chant.numero +
@@ -831,29 +900,41 @@ function afficherChant(chant) {
                     chant.titre.replace(/_/g, " ") +
                     ".pdf";
 
-                document.body.appendChild(lien);
+
+                document.body.appendChild(
+                    lien
+                );
+
 
                 lien.click();
 
+
                 lien.remove();
+
 
                 setTimeout(
                     () => URL.revokeObjectURL(url),
                     1000
                 );
 
+
             } catch (error) {
+
                 console.error(
                     "Erreur lors du téléchargement du PDF :",
                     error
                 );
 
+
                 alert(
                     "Impossible de télécharger la partition PDF."
                 );
+
             }
+
         }
     );
+
 
     conteneur.appendChild(
         downloadPdfButton
@@ -868,6 +949,7 @@ function afficherChant(chant) {
         behavior: "smooth",
         block: "start"
     });
+
 }
 
 
@@ -876,19 +958,25 @@ function afficherChant(chant) {
 // --------------------------------------------------------
 
 function formaterTemps(secondes) {
+
     if (!Number.isFinite(secondes)) {
+
         return "0:00";
+
     }
+
 
     const minutes =
         Math.floor(
             secondes / 60
         );
 
+
     const secondesRestantes =
         Math.floor(
             secondes % 60
         );
+
 
     return (
         minutes +
@@ -897,4 +985,5 @@ function formaterTemps(secondes) {
             secondesRestantes
         ).padStart(2, "0")
     );
+
 }
